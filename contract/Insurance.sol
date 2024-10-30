@@ -1,9 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-contract Insurance{
+contract InsurancePlatform {
     address public owner;
     uint256 public policyCount;
+    uint256 public claimCount;
 
     struct Policy {
         uint256 id;
@@ -11,6 +12,7 @@ contract Insurance{
         uint256 premium;
         uint256 payoutAmount;
         uint256 duration;
+        uint256 startTime;
         bool active;
     }
 
@@ -19,12 +21,13 @@ contract Insurance{
         address claimant;
         bool verified;
         bool paidOut;
+        string status; // "Pending", "Approved", "Rejected"
     }
 
-    mapping(uint256 => Policy) public policies;
-    mapping(address => uint256[]) public userPolicies;
-    mapping(uint256 => Claim) public claims;
-    uint256 public claimCount;
+    mapping(uint256 => Policy) public policies; // Policy ID to Policy details
+    mapping(address => uint256[]) public userPolicies; // User address to list of policy IDs
+    mapping(uint256 => Claim) public claims; // Claim ID to Claim details
+    mapping(address => mapping(uint256 => bool)) public hasClaimed; // Track if a user has claimed a specific policy
 
     event PolicyCreated(uint256 policyId, string policyType, uint256 premium, uint256 payoutAmount);
     event PolicyPurchased(address user, uint256 policyId);
@@ -39,5 +42,98 @@ contract Insurance{
 
     constructor() {
         owner = msg.sender;
+    }
+
+    // Create a new insurance policy
+    function createPolicy(
+        string memory _policyType,
+        uint256 _premium,
+        uint256 _payoutAmount,
+        uint256 _duration
+    ) public onlyOwner {
+        policyCount++;
+        policies[policyCount] = Policy(
+            policyCount,
+            _policyType,
+            _premium,
+            _payoutAmount,
+            _duration,
+            block.timestamp,
+            true
+        );
+        emit PolicyCreated(policyCount, _policyType, _premium, _payoutAmount);
+    }
+
+    // Deactivate a policy
+    function deactivatePolicy(uint256 _policyId) public onlyOwner {
+        policies[_policyId].active = false;
+    }
+
+    // Purchase a policy by paying the premium
+    function purchasePolicy(uint256 _policyId) public payable {
+        Policy memory policy = policies[_policyId];
+        require(policy.active, "Policy is not active");
+        require(msg.value == policy.premium, "Incorrect premium amount");
+
+        userPolicies[msg.sender].push(_policyId);
+        emit PolicyPurchased(msg.sender, _policyId);
+    }
+
+    // Submit a claim for an active policy
+    function submitClaim(uint256 _policyId) public {
+        require(isPolicyHolder(msg.sender, _policyId), "Not a policy holder");
+        require(!hasClaimed[msg.sender][_policyId], "Claim already submitted for this policy");
+
+        Policy memory policy = policies[_policyId];
+        require(block.timestamp <= policy.startTime + policy.duration, "Policy has expired");
+
+        claimCount++;
+        claims[claimCount] = Claim(_policyId, msg.sender, false, false, "Pending");
+        hasClaimed[msg.sender][_policyId] = true;
+        emit ClaimSubmitted(claimCount, _policyId, msg.sender);
+    }
+
+    // Verify and approve or reject a claim
+    function verifyClaim(uint256 _claimId, bool _approved) public onlyOwner {
+        Claim storage claim = claims[_claimId];
+        require(!claim.paidOut, "Claim already paid out");
+
+        if (_approved) {
+            claim.verified = true;
+            claim.status = "Approved";
+            payoutClaim(_claimId);
+        } else {
+            claim.status = "Rejected";
+        }
+        emit ClaimVerified(_claimId, _approved);
+    }
+
+    // Payout a verified claim
+    function payoutClaim(uint256 _claimId) private {
+        Claim storage claim = claims[_claimId];
+        Policy memory policy = policies[claim.policyId];
+
+        require(claim.verified, "Claim not verified");
+        require(!claim.paidOut, "Already paid out");
+
+        claim.paidOut = true;
+        payable(claim.claimant).transfer(policy.payoutAmount);
+        emit PayoutIssued(_claimId, claim.claimant, policy.payoutAmount);
+    }
+
+    // Check if a user holds a specific policy
+    function isPolicyHolder(address _user, uint256 _policyId) private view returns (bool) {
+        uint256[] memory userPolicyList = userPolicies[_user];
+        for (uint256 i = 0; i < userPolicyList.length; i++) {
+            if (userPolicyList[i] == _policyId) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // Get list of policies owned by a user
+    function getUserPolicies(address _user) public view returns (uint256[] memory) {
+        return userPolicies[_user];
     }
 }

@@ -28,15 +28,26 @@ contract InsurancePlatform {
     mapping(address => uint256[]) public userPolicies; // User address to list of policy IDs
     mapping(uint256 => Claim) public claims; // Claim ID to Claim details
     mapping(address => mapping(uint256 => bool)) public hasClaimed; // Track if a user has claimed a specific policy
+    mapping(address => mapping(uint256 => bool)) public refundedPolicies;
 
     event PolicyCreated(uint256 policyId, string policyType, uint256 premium, uint256 payoutAmount);
     event PolicyPurchased(address user, uint256 policyId);
     event ClaimSubmitted(uint256 claimId, uint256 policyId, address claimant);
     event ClaimVerified(uint256 claimId, bool approved);
     event PayoutIssued(uint256 claimId, address claimant, uint256 amount);
+    event PolicyDeactivated(uint256 policyId);
 
     modifier onlyOwner() {
         require(msg.sender == owner, "Only owner can execute this function");
+        _;
+    }
+    
+    modifier noActiveClaims(uint256 _policyId) {
+        for (uint256 i = 1; i <= claimCount; i++) {
+            if (claims[i].policyId == _policyId && !claims[i].paidOut && keccak256(abi.encodePacked(claims[i].status)) == keccak256(abi.encodePacked("Pending"))) {
+                revert("There is already an active claim for this policy");
+            }
+        }
         _;
     }
 
@@ -66,21 +77,24 @@ contract InsurancePlatform {
 
     // Deactivate a policy
     function deactivatePolicy(uint256 _policyId) public onlyOwner {
-        policies[_policyId].active = false;
-    }
+    policies[_policyId].active = false;
+    emit PolicyDeactivated(_policyId);
+}
 
     // Purchase a policy by paying the premium
     function purchasePolicy(uint256 _policyId) public payable {
-        Policy memory policy = policies[_policyId];
-        require(policy.active, "Policy is not active");
-        require(msg.value == policy.premium, "Incorrect premium amount");
+    Policy memory policy = policies[_policyId];
+    require(policy.active, "Policy is not active");
+    require(block.timestamp <= policy.startTime + policy.duration, "Policy has expired");
+    require(msg.value == policy.premium, "Incorrect premium amount");
 
-        userPolicies[msg.sender].push(_policyId);
-        emit PolicyPurchased(msg.sender, _policyId);
-    }
+    userPolicies[msg.sender].push(_policyId);
+    emit PolicyPurchased(msg.sender, _policyId);
+}
 
+    
     // Submit a claim for an active policy
-    function submitClaim(uint256 _policyId) public {
+    function submitClaim(uint256 _policyId) public noActiveClaims(_policyId) {
         require(isPolicyHolder(msg.sender, _policyId), "Not a policy holder");
         require(!hasClaimed[msg.sender][_policyId], "Claim already submitted for this policy");
 
@@ -92,6 +106,7 @@ contract InsurancePlatform {
         hasClaimed[msg.sender][_policyId] = true;
         emit ClaimSubmitted(claimCount, _policyId, msg.sender);
     }
+
 
     // Verify and approve or reject a claim
     function verifyClaim(uint256 _claimId, bool _approved) public onlyOwner {
@@ -120,6 +135,30 @@ contract InsurancePlatform {
         payable(claim.claimant).transfer(policy.payoutAmount);
         emit PayoutIssued(_claimId, claim.claimant, policy.payoutAmount);
     }
+
+    function refundDeactivatedPolicy(uint256 _policyId) public {
+        require(policies[_policyId].active == false, "Policy is still active");
+        require(isPolicyHolder(msg.sender, _policyId), "Not a policy holder");
+        require(!refundedPolicies[msg.sender][_policyId], "Already refunded");
+
+        Policy memory policy = policies[_policyId];
+        refundedPolicies[msg.sender][_policyId] = true;
+        payable(msg.sender).transfer(policy.premium);
+    }
+
+    function getPolicyDetails(uint256 _policyId) public view returns ( uint256 id, string memory policyType, uint256 premium, uint256 payoutAmount, uint256 duration, uint256 startTime, bool active) {
+        Policy memory policy = policies[_policyId];
+        return (
+            policy.id,
+            policy.policyType,
+            policy.premium,
+            policy.payoutAmount,
+            policy.duration,
+            policy.startTime,
+            policy.active
+        );
+}
+
 
     // Check if a user holds a specific policy
     function isPolicyHolder(address _user, uint256 _policyId) private view returns (bool) {

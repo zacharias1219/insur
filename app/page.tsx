@@ -1,18 +1,20 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import Image from 'next/image'
 import { Button } from "@/components/ui/button";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 
 export default function Home() {
   return (
     <div className="flex flex-col">
       <Header />
-      <section className="bg-blue-400 text-white">
+      <section className="bg-gradient-to-b from-[#151F8C] to-[#728AE9] text-white">
         <div className="flex flex-col items-center p-14 gap-6 justify-center">
           <div>
             <h1 className="text-5xl font-bold">We InSure</h1>
           </div>
           <div>
-            <div className="bg-blue-800 rounded-2xl w-[550px] h-[300px]">
+            <div className="bg-[#4154BF] rounded-2xl w-[275px] h-[150px] sm:w-[550px] sm:h-[300px]">
                 
             </div>
           </div>
@@ -20,43 +22,78 @@ export default function Home() {
             <p className="text-lg font-semibold">We Insure quick delivery and ease of use</p>
           </div>
           <div>
-            <Button className="bg-black text-white shadow-md shadow-black">Get Started</Button>
+            <Button className="bg-black text-white shadow-md shadow-black hover:bg-slate-800">Get Started</Button>
           </div>
-          <div className="">
-
+        </div>
+        <div className="justify-center gap-14 text-3xl font-bold pt-2 pb-16 flex flex-col md:flex-row align-center items-center">
+          <div className="flex flex-col md:flex-row gap-2">
+            <Image src='/logo.svg' width={30} height={30} alt='logo' className='object-contain'/>
+            <h1>AdVantage</h1>
+          </div>
+          <div className="flex flex-col md:flex-row gap-2">
+            <Image src='/logo.svg' width={30} height={30} alt='logo' className='object-contain'/>
+            <h1>SIC</h1>
+          </div>
+          <div className="flex flex-col md:flex-row gap-2">
+            <Image src='/logo.svg' width={30} height={30} alt='logo' className='object-contain'/>
+            <h1>MSC</h1>
+          </div>
+          <div className="flex flex-col md:flex-row gap-2">
+            <Image src='/logo.svg' width={30} height={30} alt='logo' className='object-contain'/>
+            <h1>THUB</h1>
           </div>
         </div>
       </section>
       <section className="bg-black text-white">
-        <div className="p-8 py-16 flex flex-col items-center gap-8">
-          <div className="flex flex-row gap-8">
-            <div className="bg-slate-700 rounded-lg w-[300px] h-[220px]">
+        <div className="p-8 py-16 flex flex-col items-center gap-14">
+          <div className="flex flex-col md:flex-row gap-16">
+            <div className="bg-slate-700 rounded-lg w-[400px] h-[280px]">
                dfg
             </div>
-            <div className="rounded-lg w-[300px] h-[220px] items-start pt-8 px-4 pr-16">
+            <div className="rounded-lg w-[400px] h-[280px] items-start pt-8 px-4 pr-16">
                 <h1 className="text-4xl font-bold">Fast</h1>
                 <p className="text-sm font-semibold pt-6 text-slate-400 pb-4">We deliver your insurance policy in minutes</p>
                 <Button className="bg-slate-900 text-white">Read More</Button>
             </div>
           </div>
-          <div className="flex flex-row gap-8">
-          <div className="rounded-lg w-[300px] h-[220px] items-start pt-8 px-4 pr-16">
+          <div className="flex flex-col-reverse md:flex-row gap-16">
+          <div className="rounded-lg w-[400px] h-[280px] items-start pt-8 px-4 pr-16">
                 <h1 className="text-4xl font-bold">Easy</h1>
                 <p className="text-sm font-semibold pt-6 text-slate-400 pb-4">Use Ethereum to make Insurance with ease</p>
                 <Button className="bg-slate-900 text-white">Read More</Button>
             </div>
-            <div className="bg-slate-600 rounded-lg w-[300px] h-[220px]">
+            <div className="bg-slate-600 rounded-lg w-[400px] h-[280px]">
                 dfg
             </div>
           </div>
         </div>
       </section>
       <section>
-        <div className="py-20">
+        <div className="py-20 bg-gradient-to-t from-[#151F8C] to-[#728AE9]">
           <div className="flex flex-col items-center gap-6 justify-center">
-            <div className="text-black text-4xl font-bold">FAQ</div>
+            <div className="text-black text-4xl font-bold pb-10">FAQ</div>
             <div className="text-black text-2xl font-bold">
-              
+            <Accordion type="single" collapsible className="px-6 py-4 md:w-[800px] w-[300px] bg-white rounded-3xl border">
+              <AccordionItem value="item-1">
+                <AccordionTrigger>Is it accessible?</AccordionTrigger>
+                <AccordionContent>
+                  Yes. It adheres to the WAI-ARIA design pattern.
+                </AccordionContent>
+              </AccordionItem>
+              <AccordionItem value="item-2">
+                <AccordionTrigger>Is it styled?</AccordionTrigger>
+                <AccordionContent>
+                  Yes. It comes with default styles that matches the other
+                  components&apos; aesthetic.
+                </AccordionContent>
+              </AccordionItem>
+              <AccordionItem value="item-3">
+                <AccordionTrigger>Is it animated?</AccordionTrigger>
+                <AccordionContent>
+                  Yes. It's animated by default, but you can disable it if you prefer.
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
             </div>
           </div>
         </div>
@@ -64,8 +101,8 @@ export default function Home() {
       <section className="bg-black">
         <div className="text-white py-20">
           <div className="flex flex-col items-center gap-6 justify-center">
-            <div className="text-4xl font-bold">Sign up today</div>
-            <Button className="bg-white text-black">Get Started</Button>
+            <div className="text-4xl font-bold pb-4">Sign up today</div>
+            <Button className="bg-white text-black hover:bg-slate-300">Get Started</Button>
           </div>
         </div>
       </section>

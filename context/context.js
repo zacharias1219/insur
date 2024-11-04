@@ -37,7 +37,7 @@ export const submitClaim = async (policyId) => {
     const contract = await INSURANCE_CONTRACT();
     const tx = await contract.submitClaim(policyId);
     await tx.wait();
-    console.log("Claim submitted successfully:", tx);
+    console.log("Claim submitted successfully:", tx); 
   } catch (error) {
     console.error("Error submitting claim:", error);
   }

@@ -2,7 +2,8 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Image from 'next/image'
 import { Button } from "@/components/ui/button";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import Link from 'next/link'
 
 export default function Home() {
   return (
@@ -22,7 +23,9 @@ export default function Home() {
             <p className="text-lg pt-8 font-semibold">We Insure quick delivery and ease of use</p>
           </div>
           <div>
+            <Link href="/sign-in">
             <Button className="bg-black text-white shadow-md shadow-black hover:bg-slate-800">Get Started</Button>
+            </Link>
           </div>
         </div>
         <div className="justify-center gap-14 text-5xl font-bold pt-20 pb-16 flex flex-col md:flex-row align-center items-center">

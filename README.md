@@ -23,6 +23,6 @@ Evidence](https://journals.sagepub.com/doi/pdf/10.1177/21582440221079877)
 
 ## UI Designing
 
-Designing a user interface user [FRAMER](framer.com) for an blockchain based insurance application that utilizes involves creating an intuitive and secure platform
+Designing a user interface using [FRAMER](framer.com) for an blockchain based insurance application that utilizes involves creating an intuitive and secure platform
 
 [Link](https://thrilled-seat-660241.framer.app)

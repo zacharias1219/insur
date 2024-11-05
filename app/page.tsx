@@ -11,21 +11,21 @@ export default function Home() {
       <section className="bg-gradient-to-b from-[#151F8C] to-[#728AE9] text-white">
         <div className="flex flex-col items-center p-14 gap-6 justify-center">
           <div>
-            <h1 className="text-5xl font-bold">We InSure</h1>
+            <h1 className="text-7xl pt-10 font-bold">We InSure</h1>
           </div>
-          <div>
-            <div className="bg-[#4154BF] rounded-2xl w-[275px] h-[150px] sm:w-[550px] sm:h-[300px]">
+          <div className="pt-10">
+            <div className="bg-[#4154BF] rounded-2xl w-[275px] h-[150px] sm:w-[750px] sm:h-[450px]">
                 
             </div>
           </div>
           <div>
-            <p className="text-lg font-semibold">We Insure quick delivery and ease of use</p>
+            <p className="text-lg pt-8 font-semibold">We Insure quick delivery and ease of use</p>
           </div>
           <div>
             <Button className="bg-black text-white shadow-md shadow-black hover:bg-slate-800">Get Started</Button>
           </div>
         </div>
-        <div className="justify-center gap-14 text-3xl font-bold pt-2 pb-16 flex flex-col md:flex-row align-center items-center">
+        <div className="justify-center gap-14 text-5xl font-bold pt-20 pb-16 flex flex-col md:flex-row align-center items-center">
           <div className="flex flex-col md:flex-row gap-2">
             <Image src='/logo.svg' width={30} height={30} alt='logo' className='object-contain'/>
             <h1>AdVantage</h1>
@@ -51,15 +51,15 @@ export default function Home() {
                dfg
             </div>
             <div className="rounded-lg w-[400px] h-[280px] items-start pt-8 px-4 pr-16">
-                <h1 className="text-4xl font-bold">Fast</h1>
-                <p className="text-sm font-semibold pt-6 text-slate-400 pb-4">We deliver your insurance policy in minutes</p>
+                <h1 className="text-6xl font-bold">Fast</h1>
+                <p className="text-2xl font-semibold pt-6 text-slate-400 pb-4">We deliver your insurance policy in minutes</p>
                 <Button className="bg-slate-900 text-white">Read More</Button>
             </div>
           </div>
           <div className="flex flex-col-reverse md:flex-row gap-16">
           <div className="rounded-lg w-[400px] h-[280px] items-start pt-8 px-4 pr-16">
-                <h1 className="text-4xl font-bold">Easy</h1>
-                <p className="text-sm font-semibold pt-6 text-slate-400 pb-4">Use Ethereum to make Insurance with ease</p>
+                <h1 className="text-6xl font-bold">Easy</h1>
+                <p className="text-2xl font-semibold pt-6 text-slate-400 pb-4">Use Ethereum to make Insurance with ease</p>
                 <Button className="bg-slate-900 text-white">Read More</Button>
             </div>
             <div className="bg-slate-600 rounded-lg w-[400px] h-[280px]">
@@ -72,7 +72,7 @@ export default function Home() {
         <div className="py-20 bg-gradient-to-t from-[#151F8C] to-[#728AE9]">
           <div className="flex flex-col items-center gap-6 justify-center">
             <div className="text-black text-4xl font-bold pb-10">FAQ</div>
-            <div className="text-black text-2xl font-bold">
+            <div className="text-black text-xl font-bold">
             <Accordion type="single" collapsible className="px-6 py-4 md:w-[800px] w-[300px] bg-white rounded-3xl border">
               <AccordionItem value="item-1">
                 <AccordionTrigger>Is it accessible?</AccordionTrigger>

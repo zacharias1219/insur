@@ -7,7 +7,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Button } from './ui/button'
 
-const Sidebar = () => {
+const Sidebar = () => { 
   const pathname = usePathname();
 
   return (
@@ -29,7 +29,7 @@ const Sidebar = () => {
                   }`}>
                     <Link className="p-16-semibold flex size-full gap-4 p-4" href={link.route}>
                       <Image 
-                        src={link.icon}
+                        src="/logo.svg"
                         alt="logo"
                         width={24}
                         height={24}
@@ -49,7 +49,7 @@ const Sidebar = () => {
           </SignedIn>
 
           <SignedOut>
-            <Button asChild className="py-4 px-6 flex-center gap-3 rounded-full p-16-semibold focus-visible:ring-offset-0 focus-visible:ring-transparent bg-purple-gradient bg-cover">
+            <Button asChild className="py-4 px-6 flex-center gap-3 text-md font-bold rounded-full p-16-semibold focus-visible:ring-offset-0 focus-visible:ring-transparent bg-purple-gradient bg-cover">
               <Link href="/sign-in">Login</Link>
             </Button>
           </SignedOut>

@@ -23,26 +23,26 @@ export default function Home() {
             <p className="text-lg pt-8 font-semibold">We Insure quick delivery and ease of use</p>
           </div>
           <div>
-            <Link href="/sign-in">
+            <Link href="#">
             <Button className="bg-black text-white shadow-md shadow-black hover:bg-slate-800">Get Started</Button>
             </Link>
           </div>
         </div>
         <div className="justify-center gap-14 text-5xl font-bold pt-20 pb-16 flex flex-col md:flex-row align-center items-center">
-          <div className="flex flex-col md:flex-row gap-2">
-            <Image src='/logo.svg' width={30} height={30} alt='logo' className='object-contain'/>
+          <div className="flex flex-col md:flex-row gap-3">
+            <Image src='/logo.svg' width={40} height={40} alt='logo' className='pt-2 object-contain'/>
             <h1>AdVantage</h1>
           </div>
-          <div className="flex flex-col md:flex-row gap-2">
-            <Image src='/logo.svg' width={30} height={30} alt='logo' className='object-contain'/>
+          <div className="flex flex-col md:flex-row gap-3">
+            <Image src='/logo.svg' width={40} height={40} alt='logo' className='pt-2 object-contain'/>
             <h1>SIC</h1>
           </div>
-          <div className="flex flex-col md:flex-row gap-2">
-            <Image src='/logo.svg' width={30} height={30} alt='logo' className='object-contain'/>
+          <div className="flex flex-col md:flex-row gap-3">
+            <Image src='/logo.svg' width={40} height={40} alt='logo' className='pt-2 object-contain'/>
             <h1>MSC</h1>
           </div>
-          <div className="flex flex-col md:flex-row gap-2">
-            <Image src='/logo.svg' width={30} height={30} alt='logo' className='object-contain'/>
+          <div className="flex flex-col md:flex-row gap-3">
+            <Image src='/logo.svg' width={40} height={40} alt='logo' className='pt-2 object-contain'/>
             <h1>THUB</h1>
           </div>
         </div>

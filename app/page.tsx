@@ -23,26 +23,26 @@ export default function Home() {
             <p className="text-lg pt-8 font-semibold">We Insure quick delivery and ease of use</p>
           </div>
           <div>
-            <Link href="#">
+            <Link href="/sign-in">
             <Button className="bg-black text-white shadow-md shadow-black hover:bg-slate-800">Get Started</Button>
             </Link>
           </div>
         </div>
-        <div className="justify-center gap-14 text-5xl font-bold pt-20 pb-16 flex flex-col md:flex-row align-center items-center">
+        <div className="justify-center gap-14 2xl:text-5xl font-bold pt-20 pb-16 flex flex-col md:flex-row align-center items-center">
           <div className="flex flex-col md:flex-row gap-3">
-            <Image src='/logo.svg' width={40} height={40} alt='logo' className='pt-2 object-contain'/>
+            <Image src='/logo.svg' width={40} height={40} alt='logo' className='2xl:pt-2 object-contain'/>
             <h1>AdVantage</h1>
           </div>
           <div className="flex flex-col md:flex-row gap-3">
-            <Image src='/logo.svg' width={40} height={40} alt='logo' className='pt-2 object-contain'/>
+            <Image src='/logo.svg' width={40} height={40} alt='logo' className='2xl:pt-2 object-contain'/>
             <h1>SIC</h1>
           </div>
           <div className="flex flex-col md:flex-row gap-3">
-            <Image src='/logo.svg' width={40} height={40} alt='logo' className='pt-2 object-contain'/>
+            <Image src='/logo.svg' width={40} height={40} alt='logo' className='2xl:pt-2 object-contain'/>
             <h1>MSC</h1>
           </div>
           <div className="flex flex-col md:flex-row gap-3">
-            <Image src='/logo.svg' width={40} height={40} alt='logo' className='pt-2 object-contain'/>
+            <Image src='/logo.svg' width={40} height={40} alt='logo' className='2xl:pt-2 object-contain'/>
             <h1>THUB</h1>
           </div>
         </div>
@@ -93,7 +93,7 @@ export default function Home() {
               <AccordionItem value="item-3">
                 <AccordionTrigger>Is it animated?</AccordionTrigger>
                 <AccordionContent>
-                  Yes. It's animated by default, but you can disable it if you prefer.
+                  Yes. It is animated by default, but you can disable it if you prefer.
                 </AccordionContent>
               </AccordionItem>
             </Accordion>

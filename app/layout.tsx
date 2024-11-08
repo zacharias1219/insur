@@ -3,7 +3,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 import {
   ClerkProvider,
-  SignInButton,
+  // SignInButton,
   SignedIn,
   SignedOut,
   UserButton

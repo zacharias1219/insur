@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import Link from 'next/link'
 
-export default function Home() {
+export default function LandingPage() {
   return (
     <div className="flex flex-col">
       <Header />
@@ -23,7 +23,7 @@ export default function Home() {
             <p className="text-lg pt-8 font-semibold">We Insure quick delivery and ease of use</p>
           </div>
           <div>
-            <Link href="/sign-in">
+            <Link href="/sign-up">
             <Button className="bg-black text-white shadow-md shadow-black hover:bg-slate-800">Get Started</Button>
             </Link>
           </div>
@@ -105,7 +105,9 @@ export default function Home() {
         <div className="text-white py-20">
           <div className="flex flex-col items-center gap-6 justify-center">
             <div className="text-4xl font-bold pb-4">Sign up today</div>
-            <Button className="bg-white text-black hover:bg-slate-300">Get Started</Button>
+            <Link href="/sign-up">
+              <Button className="bg-white text-black hover:bg-slate-300">Get Started</Button>
+            </Link>
           </div>
         </div>
       </section>

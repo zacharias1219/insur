@@ -21,6 +21,12 @@ Evidence](https://journals.sagepub.com/doi/pdf/10.1177/21582440221079877)
 2. [How Blockchain is Disrupting Insurance Companies with Smart Contracts](https://www.youtube.com/watch?v=wkItYloSTJQ)
 3. [WaWF TECH #01 Watch Me Build a Blockchain Insurance App](https://www.youtube.com/watch?v=llqf3X5ipeI)
 
+## Business Proposition
+
+The following Notion Documentation talks about the business prospect of this particular application along with System Architecture and Product Development Plan
+
+[Page](https://richard-ai.notion.site/Insur-13831f134827802faee4f2308606146b)
+
 ## UI Designing
 
 Designing a user interface using [FRAMER](framer.com) for an blockchain based insurance application that utilizes involves creating an intuitive and secure platform

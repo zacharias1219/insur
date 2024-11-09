@@ -1,27 +1,27 @@
 export const navLinks = [
     {
       label: "Overview",
-      route: "/overview",
+      route: "/user/overview",
       icon: "/assets/icons/home.svg",
     },
     {
       label: "Policies",
-      route: "/policies",
+      route: "/user/policies",
       icon: "/assets/icons/image.svg",
     },
     {
       label: "Claims",
-      route: "/claims",
+      route: "/user/claims",
       icon: "/assets/icons/stars.svg",
     },
     {
       label: "Transactions",
-      route: "/transactions",
+      route: "/user/transactions",
       icon: "/assets/icons/scan.svg",
     },
     {
       label: "Support",
-      route: "/Support",
+      route: "/user/support",
       icon: "/assets/icons/filter.svg",
     }
   ];

@@ -22,9 +22,12 @@ export default function LandingPage() {
           <div>
             <p className="text-lg pt-8 font-semibold">We Insure quick delivery and ease of use</p>
           </div>
-          <div>
-            <Link href="/sign-up">
-            <Button className="bg-black text-white shadow-md shadow-black hover:bg-slate-800">Get Started</Button>
+          <div className="flex flex-row gap-4">
+            <Link href="/user/overview">
+            <Button className="bg-black text-white shadow-md shadow-black hover:bg-slate-800">User Dashboard</Button>
+            </Link>
+            <Link href="/adm/overview">
+            <Button className="bg-white text-black shadow-md shadow-black hover:bg-slate-800">Admin Dashboard</Button>
             </Link>
           </div>
         </div>

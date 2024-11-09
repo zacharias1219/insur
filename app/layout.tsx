@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 // import MobileNav from '@/components/MobileNav'
-import Sidebar from '@/components/Sidebar'
+import Sidebar from '@/components/user/Sidebar'
 // import { Toaster } from '@/components/ui/toaster'
 import {
   ClerkProvider,

@@ -1,5 +1,5 @@
 import MobileNav from '@/components/MobileNav'
-import Sidebar from '@/components/Sidebar'
+import Sidebar from '@/components/user/Sidebar'
 import { Toaster } from '@/components/ui/toaster'
 
 const Layout = ({ children }: { children: React.ReactNode }) => {

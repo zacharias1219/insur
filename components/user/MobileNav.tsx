@@ -1,7 +1,7 @@
 "use client"
 
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
-import { navLinks } from "@/constants"
+import { userNavLinks } from "@/constants"
 import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs"
 import Image from "next/image"
 import Link from "next/link"
@@ -46,7 +46,7 @@ const MobileNav = () => {
                 />
 
               <ul className="header-nav_elements">
-              {navLinks.map((link) => {
+              {userNavLinks.map((link) => {
                 const isActive = link.route === pathname
 
                 return (

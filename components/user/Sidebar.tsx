@@ -1,6 +1,6 @@
 "use client"
 
-import { navLinks } from '@/constants'
+import { userNavLinks } from '@/constants'
 import { SignedIn, SignedOut, UserButton } from '@clerk/nextjs'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -24,7 +24,7 @@ const Sidebar = () => {
         <nav className="h-full flex-col justify-between md:flex md:gap-4">
           <SignedIn>
             <ul className="hidden w-full flex-col items-start gap-2 md:flex">
-              {navLinks.map((link) => {
+              {userNavLinks.map((link) => {
                 const isActive = link.route === pathname
 
                 return (

@@ -23,10 +23,10 @@ export default function LandingPage() {
             <p className="text-lg pt-8 font-semibold">We Insure quick delivery and ease of use</p>
           </div>
           <div className="flex flex-row gap-4">
-            <Link href="/user/overview">
+            <Link href="/user/explore">
             <Button className="bg-black text-white shadow-md shadow-black/60 hover:bg-slate-800">User Dashboard</Button>
             </Link>
-            <Link href="/admin/overview">
+            <Link href="/admin/policyManagement">
             <Button className="bg-white text-black shadow-md shadow-black/60 hover:bg-slate-800">Admin Dashboard</Button>
             </Link>
           </div>

@@ -6,48 +6,49 @@ contract InsurancePlatform {
     uint256 public policyCount;
     uint256 public claimCount;
 
+    enum ClaimStatus { Pending, Approved, Rejected }
+
     struct Policy {
         uint256 id;
         string policyType;
         uint256 premium;
-        uint256 payoutAmount;
+        uint256 coverageAmount;
         uint256 duration;
         uint256 startTime;
+        address policyHolder;
         bool active;
+        bool renewable;
     }
 
     struct Claim {
+        uint256 id;
         uint256 policyId;
         address claimant;
-        bool verified;
+        ClaimStatus status;
+        uint256 claimAmount;
         bool paidOut;
-        string status; // "Pending", "Approved", "Rejected"
     }
 
-    mapping(uint256 => Policy) public policies; // Policy ID to Policy details
-    mapping(address => uint256[]) public userPolicies; // User address to list of policy IDs
-    mapping(uint256 => Claim) public claims; // Claim ID to Claim details
-    mapping(address => mapping(uint256 => bool)) public hasClaimed; // Track if a user has claimed a specific policy
-    mapping(address => mapping(uint256 => bool)) public refundedPolicies;
+    mapping(uint256 => Policy) public policies;
+    mapping(uint256 => Claim) public claims;
+    mapping(address => uint256[]) public userPolicies;
 
-    event PolicyCreated(uint256 policyId, string policyType, uint256 premium, uint256 payoutAmount);
-    event PolicyPurchased(address user, uint256 policyId);
+    event PolicyCreated(uint256 policyId, string policyType, uint256 premium, uint256 coverageAmount);
+    event PolicyUpdated(uint256 policyId, string policyType, uint256 premium, uint256 coverageAmount);
+    event PolicyPurchased(uint256 policyId, address policyHolder);
+    event PolicyStatusChanged(uint256 policyId, bool activeStatus);
     event ClaimSubmitted(uint256 claimId, uint256 policyId, address claimant);
-    event ClaimVerified(uint256 claimId, bool approved);
+    event ClaimProcessed(uint256 claimId, ClaimStatus status);
     event PayoutIssued(uint256 claimId, address claimant, uint256 amount);
-    event PolicyDeactivated(uint256 policyId);
+    event RefundIssued(uint256 policyId, address policyHolder);
 
     modifier onlyOwner() {
-        require(msg.sender == owner, "Only owner can execute this function");
+        require(msg.sender == owner, "Only the owner can perform this action");
         _;
     }
-    
-    modifier noActiveClaims(uint256 _policyId) {
-        for (uint256 i = 1; i <= claimCount; i++) {
-            if (claims[i].policyId == _policyId && !claims[i].paidOut && keccak256(abi.encodePacked(claims[i].status)) == keccak256(abi.encodePacked("Pending"))) {
-                revert("There is already an active claim for this policy");
-            }
-        }
+
+    modifier onlyPolicyHolder(uint256 _policyId) {
+        require(policies[_policyId].policyHolder == msg.sender, "Caller is not the policyholder");
         _;
     }
 
@@ -55,124 +56,176 @@ contract InsurancePlatform {
         owner = msg.sender;
     }
 
-    // Create a new insurance policy
+    // =======================
+    // Admin Functions
+    // =======================
+
     function createPolicy(
-        string memory _policyType,
-        uint256 _premium,
-        uint256 _payoutAmount,
-        uint256 _duration
+        string memory _policyType, 
+        uint256 _premium, 
+        uint256 _coverageAmount, 
+        uint256 _duration, 
+        bool _renewable
     ) public onlyOwner {
         policyCount++;
-        policies[policyCount] = Policy(
-            policyCount,
-            _policyType,
-            _premium,
-            _payoutAmount,
-            _duration,
-            block.timestamp,
-            true
-        );
-        emit PolicyCreated(policyCount, _policyType, _premium, _payoutAmount);
+        policies[policyCount] = Policy({
+            id: policyCount,
+            policyType: _policyType,
+            premium: _premium,
+            coverageAmount: _coverageAmount,
+            duration: _duration,
+            startTime: 0,
+            policyHolder: address(0),
+            active: false,
+            renewable: _renewable
+        });
+        emit PolicyCreated(policyCount, _policyType, _premium, _coverageAmount);
     }
 
-    // Deactivate a policy
-    function deactivatePolicy(uint256 _policyId) public onlyOwner {
-    policies[_policyId].active = false;
-    emit PolicyDeactivated(_policyId);
-}
+    function modifyPolicy(
+        uint256 _policyId, 
+        string memory _policyType, 
+        uint256 _premium, 
+        uint256 _coverageAmount
+    ) public onlyOwner {
+        Policy storage policy = policies[_policyId];
+        policy.policyType = _policyType;
+        policy.premium = _premium;
+        policy.coverageAmount = _coverageAmount;
+        emit PolicyUpdated(_policyId, _policyType, _premium, _coverageAmount);
+    }
 
-    // Purchase a policy by paying the premium
+    function changePolicyStatus(uint256 _policyId, bool _active) public onlyOwner {
+        policies[_policyId].active = _active;
+        emit PolicyStatusChanged(_policyId, _active);
+    }
+
+    function viewClaim(uint256 _claimId) public view onlyOwner returns (Claim memory) {
+        return claims[_claimId];
+    }
+
+    function approveOrRejectClaim(uint256 _claimId, bool _approve) public onlyOwner {
+        Claim storage claim = claims[_claimId];
+        require(claim.status == ClaimStatus.Pending, "Claim has already been processed");
+
+        if (_approve) {
+            claim.status = ClaimStatus.Approved;
+            processPayout(_claimId);
+        } else {
+            claim.status = ClaimStatus.Rejected;
+        }
+        emit ClaimProcessed(_claimId, claim.status);
+    }
+
+    function processPayout(uint256 _claimId) private {
+        Claim storage claim = claims[_claimId];
+        Policy storage policy = policies[claim.policyId];
+        require(claim.status == ClaimStatus.Approved, "Claim has not been approved");
+
+        claim.paidOut = true;
+        payable(claim.claimant).transfer(policy.coverageAmount);
+        emit PayoutIssued(_claimId, claim.claimant, policy.coverageAmount);
+    }
+
+    function refundPolicy(uint256 _policyId) public onlyOwner {
+        Policy storage policy = policies[_policyId];
+        require(!policy.active, "Policy must be inactive to issue a refund");
+
+        address policyHolder = policy.policyHolder;
+        uint256 premiumRefund = policy.premium;
+        policy.premium = 0;
+        payable(policyHolder).transfer(premiumRefund);
+
+        emit RefundIssued(_policyId, policyHolder);
+    }
+
+    function getCustomerPolicies(address _customer) public view onlyOwner returns (uint256[] memory) {
+        return userPolicies[_customer];
+    }
+
+    function auditTrails() public view onlyOwner returns (uint256 totalPolicies, uint256 totalClaims) {
+        return (policyCount, claimCount);
+    }
+
+    // =======================
+    // User Functions
+    // =======================
+
+    function viewAvailablePolicies() public view returns (Policy[] memory) {
+        Policy[] memory allPolicies = new Policy[](policyCount);
+        for (uint256 i = 1; i <= policyCount; i++) {
+            allPolicies[i - 1] = policies[i];
+        }
+        return allPolicies;
+    }
+
     function purchasePolicy(uint256 _policyId) public payable {
-    Policy memory policy = policies[_policyId];
-    require(policy.active, "Policy is not active");
-    require(block.timestamp <= policy.startTime + policy.duration, "Policy has expired");
-    require(msg.value == policy.premium, "Incorrect premium amount");
+        Policy storage policy = policies[_policyId];
+        require(msg.value == policy.premium, "Incorrect premium amount");
+        require(!policy.active, "Policy is already active");
 
-    userPolicies[msg.sender].push(_policyId);
-    emit PolicyPurchased(msg.sender, _policyId);
-}
+        policy.policyHolder = msg.sender;
+        policy.startTime = block.timestamp;
+        policy.active = true;
+        userPolicies[msg.sender].push(_policyId);
 
-    
-    // Submit a claim for an active policy
-    function submitClaim(uint256 _policyId) public noActiveClaims(_policyId) {
-        require(isPolicyHolder(msg.sender, _policyId), "Not a policy holder");
-        require(!hasClaimed[msg.sender][_policyId], "Claim already submitted for this policy");
+        emit PolicyPurchased(_policyId, msg.sender);
+    }
 
-        Policy memory policy = policies[_policyId];
-        require(block.timestamp <= policy.startTime + policy.duration, "Policy has expired");
+    function submitClaim(uint256 _policyId, uint256 _claimAmount) public onlyPolicyHolder(_policyId) {
+        Policy storage policy = policies[_policyId];
+        require(policy.active, "Policy must be active to submit a claim");
 
         claimCount++;
-        claims[claimCount] = Claim(_policyId, msg.sender, false, false, "Pending");
-        hasClaimed[msg.sender][_policyId] = true;
+        claims[claimCount] = Claim({
+            id: claimCount,
+            policyId: _policyId,
+            claimant: msg.sender,
+            status: ClaimStatus.Pending,
+            claimAmount: _claimAmount,
+            paidOut: false
+        });
+
         emit ClaimSubmitted(claimCount, _policyId, msg.sender);
     }
 
-
-    // Verify and approve or reject a claim
-    function verifyClaim(uint256 _claimId, bool _approved) public onlyOwner {
-        Claim storage claim = claims[_claimId];
-        require(!claim.paidOut, "Claim already paid out");
-
-        if (_approved) {
-            claim.verified = true;
-            claim.status = "Approved";
-            payoutClaim(_claimId);
-        } else {
-            claim.status = "Rejected";
-        }
-        emit ClaimVerified(_claimId, _approved);
+    function getClaimStatus(uint256 _claimId) public view returns (ClaimStatus) {
+        return claims[_claimId].status;
     }
 
-    // Payout a verified claim
-    function payoutClaim(uint256 _claimId) private {
-        Claim storage claim = claims[_claimId];
-        Policy memory policy = policies[claim.policyId];
+    function renewPolicy(uint256 _policyId) public payable onlyPolicyHolder(_policyId) {
+        Policy storage policy = policies[_policyId];
+        require(policy.renewable, "Policy is not renewable");
+        require(msg.value == policy.premium, "Incorrect renewal premium");
 
-        require(claim.verified, "Claim not verified");
-        require(!claim.paidOut, "Already paid out");
-
-        claim.paidOut = true;
-        payable(claim.claimant).transfer(policy.payoutAmount);
-        emit PayoutIssued(_claimId, claim.claimant, policy.payoutAmount);
+        policy.startTime = block.timestamp;
+        policy.active = true;
     }
 
-    function refundDeactivatedPolicy(uint256 _policyId) public {
-        require(policies[_policyId].active == false, "Policy is still active");
-        require(isPolicyHolder(msg.sender, _policyId), "Not a policy holder");
-        require(!refundedPolicies[msg.sender][_policyId], "Already refunded");
+    function makePremiumPayment(uint256 _policyId) public payable onlyPolicyHolder(_policyId) {
+        Policy storage policy = policies[_policyId];
+        require(msg.value == policy.premium, "Incorrect premium amount");
 
-        Policy memory policy = policies[_policyId];
-        refundedPolicies[msg.sender][_policyId] = true;
-        payable(msg.sender).transfer(policy.premium);
+        policy.startTime = block.timestamp;
+        policy.active = true;
     }
 
-    function getPolicyDetails(uint256 _policyId) public view returns ( uint256 id, string memory policyType, uint256 premium, uint256 payoutAmount, uint256 duration, uint256 startTime, bool active) {
-        Policy memory policy = policies[_policyId];
-        return (
-            policy.id,
-            policy.policyType,
-            policy.premium,
-            policy.payoutAmount,
-            policy.duration,
-            policy.startTime,
-            policy.active
-        );
-}
+    function requestRefund(uint256 _policyId) public onlyPolicyHolder(_policyId) {
+        Policy storage policy = policies[_policyId];
+        require(!policy.active, "Policy is still active");
 
+        refundPolicy(_policyId);
+    }
 
-    // Check if a user holds a specific policy
-    function isPolicyHolder(address _user, uint256 _policyId) private view returns (bool) {
-        uint256[] memory userPolicyList = userPolicies[_user];
-        for (uint256 i = 0; i < userPolicyList.length; i++) {
-            if (userPolicyList[i] == _policyId) {
-                return true;
-            }
+    // =======================
+    // Utility Functions
+    // =======================
+
+    function renewalReminder(uint256 _policyId) public view onlyPolicyHolder(_policyId) returns (bool) {
+        Policy storage policy = policies[_policyId];
+        if (block.timestamp > policy.startTime + policy.duration - 1 days) {
+            return true; // Reminder: Policy is due for renewal within 1 day
         }
         return false;
-    }
-
-    // Get list of policies owned by a user
-    function getUserPolicies(address _user) public view returns (uint256[] memory) {
-        return userPolicies[_user];
     }
 }

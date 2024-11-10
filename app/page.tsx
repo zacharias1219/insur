@@ -9,7 +9,7 @@ export default function LandingPage() {
   return (
     <div className="flex flex-col">
       <Header />
-      <section className="bg-gradient-to-b from-[#151F8C] to-[#728AE9] text-white">
+      <section className="bg-gradient-to-b from-[#151F8C]  to-[#FF5B5B] text-white">
         <div className="flex flex-col items-center p-14 gap-6 justify-center">
           <div>
             <h1 className="text-7xl pt-10 font-bold">We InSure</h1>
@@ -24,10 +24,10 @@ export default function LandingPage() {
           </div>
           <div className="flex flex-row gap-4">
             <Link href="/user/overview">
-            <Button className="bg-black text-white shadow-md shadow-black hover:bg-slate-800">User Dashboard</Button>
+            <Button className="bg-black text-white shadow-md shadow-black/60 hover:bg-slate-800">User Dashboard</Button>
             </Link>
-            <Link href="/adm/overview">
-            <Button className="bg-white text-black shadow-md shadow-black hover:bg-slate-800">Admin Dashboard</Button>
+            <Link href="/admin/overview">
+            <Button className="bg-white text-black shadow-md shadow-black/60 hover:bg-slate-800">Admin Dashboard</Button>
             </Link>
           </div>
         </div>
@@ -75,7 +75,7 @@ export default function LandingPage() {
         </div>
       </section>
       <section>
-        <div className="py-20 bg-gradient-to-t from-[#151F8C] to-[#728AE9]">
+        <div className="py-20 bg-gradient-to-t from-[#151F8C] to-[#FF5B5B]">
           <div className="flex flex-col items-center gap-6 justify-center">
             <div className="text-black text-4xl font-bold pb-10">FAQ</div>
             <div className="text-black text-xl font-bold">

@@ -1,5 +1,5 @@
-import MobileNav from '@/components/MobileNav'
-import Sidebar from '@/components/user/Sidebar'
+import MobileNav from '@/components/user/MobileNav'
+import Sidebar from '@/components/admin/Sidebar'
 import { Toaster } from '@/components/ui/toaster'
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
@@ -8,7 +8,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
       <Sidebar />
       {/* <MobileNav /> */}
 
-      <div className="root-container">
+      <div className="p-20 root-container">
         <div className="wrapper text-white">
           {children}
         </div>

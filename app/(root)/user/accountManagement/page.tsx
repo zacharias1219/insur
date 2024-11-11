@@ -6,4 +6,4 @@ const AccountManagement = () => {
   )
 }
 
-export default AccountManagements
+export default AccountManagement

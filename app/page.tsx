@@ -15,7 +15,7 @@ export default function LandingPage() {
             <h1 className="text-7xl pt-10 font-bold">We InSure</h1>
           </div>
           <div className="pt-10">
-            <div className="bg-[#4154BF] rounded-2xl w-[275px] h-[150px] sm:w-[750px] sm:h-[450px]">
+            <div className="bg-[#562f9f] rounded-2xl w-[275px] h-[150px] sm:w-[750px] sm:h-[450px]">
                 
             </div>
           </div>

@@ -2,7 +2,15 @@ import React from 'react'
 
 const SystemMonitoring = () => {
   return (
-    <div>SystemMonitoring</div>
+    <div>
+      <div>
+        <h1 className='text-3xl font-bold'>Notifications</h1>
+        <hr></hr>
+      </div>
+      {/* Audit Trails */}
+      {/* Manage Notifications */}
+      {/* Fraud Detection */}
+    </div>
   )
 }
 

@@ -45,7 +45,10 @@ const Sidebar = () => {
                   
                 )
               })}
-              <UserButton afterSignOutUrl='/' showName />
+              <div className='pl-4 pt-10 flex flex-row items-center justify-between gap-4'>
+                <UserButton afterSignOutUrl='/'/>
+                <p className='text-xl font-bold'>Admin</p>
+              </div>
               </ul>
             <ul className="flex-col items-start gap-2 md:hidden">
               <li className="flex-center cursor-pointer gap-2 p-4">

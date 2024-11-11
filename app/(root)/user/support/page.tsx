@@ -2,7 +2,14 @@ import React from 'react'
 
 const Support = () => {
   return (
-    <div>Support</div>
+    <div>
+      <div>
+        <h1 className='text-3xl font-bold'>Notifications</h1>
+        <hr></hr>
+      </div>
+      {/* Chatbot */}
+      {/* Feedback */}
+    </div>
   )
 }
 

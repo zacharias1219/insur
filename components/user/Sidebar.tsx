@@ -28,8 +28,8 @@ const Sidebar = () => {
                 const isActive = link.route === pathname
 
                 return (
-                  <li key={link.route} className={`flex-center pt-1 font-semibold w-full whitespace-nowrap rounded-full bg-cover  transition-all hover:bg-purple-100 hover:shadow-inner group ${
-                    isActive ? 'bg-black text-white' : 'text-black'
+                  <li key={link.route} className={`flex-center pt-1 font-semibold w-full whitespace-nowrap rounded-full bg-cover  transition-all  hover:shadow-inner group ${
+                    isActive ? 'bg-black text-white hover:bg-slate-900/80' : 'text-black bg-slate-300/30 hover:bg-slate-300/80'
                   }`}>
                     <Link className="p-16-semibold flex size-full gap-4 p-4" href={link.route}>
                       <Image 
@@ -39,13 +39,13 @@ const Sidebar = () => {
                         height={24}
                         className={`${isActive && 'brightness-200'}`}
                       />
-                      {link.label}
+                      <div className='pt-1'>{link.label}</div>
                     </Link>
                   </li>
                   
                 )
               })}
-              <div className='pl-4 pt-10 flex flex-row items-center justify-between gap-4'>
+              <div className='pl-4 pt-36 flex flex-row items-center justify-between gap-4'>
                 <UserButton afterSignOutUrl='/'/>
                 <p className='text-xl font-bold'>User</p>
               </div>
